@@ -13,13 +13,13 @@ export interface FeatureCardProps {
 export function FeatureCard({ icon, heading, description, href, className, renderLink }: FeatureCardProps) {
   const content = (
     <div className={cn(
-      'group rounded-lg border border-border bg-card p-6',
+      'group rounded-[var(--radius-lg)] border border-border bg-card p-6',
       'transition-all duration-normal',
       href && 'hover:shadow-md hover:border-primary/30 cursor-pointer',
       className
     )}>
       {icon && (
-        <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+        <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-[var(--radius-md)] bg-primary/10 text-primary">
           {icon}
         </div>
       )}
@@ -45,7 +45,16 @@ export function FeatureCard({ icon, heading, description, href, className, rende
 export interface FeatureGridProps {
   features: FeatureCardProps[];
   columns?: 2 | 3 | 4;
+  /** Optional section heading rendered above the grid */
+  heading?: string;
+  /** Optional section subheadline rendered below the heading */
+  subheadline?: string;
+  /** Accessible label for the section (defaults to heading or "Features") */
+  'aria-label'?: string;
+  /** Control section vertical padding size ('sm' | 'md' | 'lg'). Defaults to 'md'. */
+  spacing?: 'sm' | 'md' | 'lg';
   className?: string;
+  renderLink?: (props: { href: string; className: string; children: ReactNode }) => ReactNode;
 }
 
 const colClasses = {
@@ -54,12 +63,51 @@ const colClasses = {
   4: 'sm:grid-cols-2 lg:grid-cols-4',
 };
 
-export function FeatureGrid({ features, columns = 3, className }: FeatureGridProps) {
+// const spacingVar = {
+//   sm: 'var(--spacing-section-sm)',
+//   md: 'var(--spacing-section)',
+//   lg: 'var(--spacing-section-lg)',
+// };
+
+export function FeatureGrid({
+  features,
+  columns = 3,
+  heading,
+  subheadline,
+  'aria-label': ariaLabel,
+  spacing = 'md',
+  className,
+  renderLink,
+}: FeatureGridProps) {
+  const sectionLabel = ariaLabel ?? heading ?? 'Features';
+  // const pad = spacingVar[spacing];
+
   return (
-    <div className={cn('grid grid-cols-1 gap-6', colClasses[columns], className)}>
-      {features.map((feature, i) => (
-        <FeatureCard key={i} {...feature} />
-      ))}
-    </div>
+    <section
+      aria-label={sectionLabel}
+      // style={{ paddingTop: pad, paddingBottom: pad }}
+    >
+      <div className="mx-auto max-w-container-xl">
+        {(heading || subheadline) && (
+          <div className="mb-12 text-center">
+            {heading && (
+              <h2 className="text-heading-xl font-heading font-bold text-foreground">
+                {heading}
+              </h2>
+            )}
+            {subheadline && (
+              <p className="mt-4 text-body-lg text-muted-foreground max-w-2xl mx-auto">
+                {subheadline}
+              </p>
+            )}
+          </div>
+        )}
+        <div className={cn('grid grid-cols-1 gap-6', colClasses[columns], className)}>
+          {features.map((feature, i) => (
+            <FeatureCard key={i} {...feature} renderLink={renderLink} />
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

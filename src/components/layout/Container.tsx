@@ -8,6 +8,8 @@ export interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
   center?: boolean;
   /** Horizontal padding */
   padding?: boolean;
+  /** Vertical spacing */
+  spacing?: boolean;
   children: ReactNode;
 }
 
@@ -24,7 +26,7 @@ const sizeClasses = {
  * Centers content and applies consistent horizontal padding.
  */
 export const Container = forwardRef<HTMLDivElement, ContainerProps>(
-  ({ className, size = 'default', center = true, padding = true, children, ...props }, ref) => {
+  ({ className, size = 'default', center = true, padding = true, spacing = true, children, ...props }, ref) => {
     return (
       <div
         ref={ref}
@@ -32,6 +34,7 @@ export const Container = forwardRef<HTMLDivElement, ContainerProps>(
           sizeClasses[size],
           center && 'mx-auto',
           padding && 'px-4 sm:px-6 lg:px-8',
+          spacing && 'space-y-16',
           className
         )}
         {...props}

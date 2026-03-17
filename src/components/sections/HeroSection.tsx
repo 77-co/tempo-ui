@@ -59,10 +59,14 @@ export function HeroSection({
     ? backgroundImage
     : backgroundImage?.url;
 
+  const hasBackground = !!(bgUrl || backgroundVideo);
+
   const ActionButton = ({ action, variant }: { action: { label: string; href?: string; onClick?: () => void }; variant: 'primary' | 'secondary' }) => {
     const cls = variant === 'primary'
       ? 'inline-flex items-center justify-center h-12 px-8 rounded-md font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring'
-      : 'inline-flex items-center justify-center h-12 px-8 rounded-md font-medium border border-white/30 text-white hover:bg-white/10 transition-colors duration-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
+      : hasBackground
+        ? 'inline-flex items-center justify-center h-12 px-8 rounded-md font-medium border border-white/30 text-white hover:bg-white/10 transition-colors duration-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring'
+        : 'inline-flex items-center justify-center h-12 px-8 rounded-md font-medium border border-border text-foreground hover:bg-muted transition-colors duration-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
 
     if (action.href && renderLink) {
       return renderLink({ href: action.href, className: cls, children: <>{action.label}</> });
@@ -75,6 +79,7 @@ export function HeroSection({
 
   return (
     <section
+      aria-label={headline}
       className={cn('relative flex flex-col justify-center overflow-hidden', alignClasses[align], className)}
       style={{ minHeight }}
     >
