@@ -1,4 +1,7 @@
-@import "tailwindcss/utilities";
+@import "tailwindcss";
+
+@source "../components/**/*.tsx";
+@source "../theme/**/*.tsx";
 
 /* Class-based dark mode */
 @custom-variant dark (&:is(.dark, .dark *));

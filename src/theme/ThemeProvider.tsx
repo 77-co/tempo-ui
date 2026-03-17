@@ -1,6 +1,6 @@
+'use client';
+
 import React, {
-  createContext,
-  useContext,
   useEffect,
   useState,
   useCallback,
@@ -11,30 +11,11 @@ import type {
   ThemeTokens,
   ThemeConfig,
   ColorTokens,
-  DeepPartial,
 } from './tokens';
-import { presetRegistry, DEFAULT_PRESET } from './presets';
-
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
-export type ColorMode = 'light' | 'dark' | 'system';
-
-export interface ThemeContextValue {
-  /** Resolved color mode ('light' | 'dark') — never 'system' */
-  resolvedMode: 'light' | 'dark';
-  /** User-selected mode preference ('light' | 'dark' | 'system') */
-  mode: ColorMode;
-  /** Set the color mode */
-  setMode: (mode: ColorMode) => void;
-  /** Toggle between light and dark */
-  toggleMode: () => void;
-  /** Active theme tokens */
-  tokens: ThemeTokens;
-}
-
-const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
+import { resolveTokens } from './themeUtils';
+import { ThemeContext } from './ThemeContext';
+import type { ColorMode, ThemeContextValue } from './ThemeContext';
+export type { ColorMode, ThemeContextValue } from './ThemeContext';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -68,62 +49,6 @@ function storeMode(mode: ColorMode) {
   } catch {
     // localStorage not available
   }
-}
-
-function resolveTokens(config: ThemeConfig): ThemeTokens {
-  let baseTokens: ThemeTokens;
-
-  if (typeof config.preset === 'string') {
-    const preset = presetRegistry[config.preset];
-    if (!preset) {
-      console.warn(
-        `[tempo-ui] Unknown preset "${config.preset}", falling back to "${DEFAULT_PRESET}".`
-      );
-      baseTokens = presetRegistry[DEFAULT_PRESET]!.tokens;
-    } else {
-      baseTokens = preset.tokens;
-    }
-  } else if (config.preset && typeof config.preset === 'object') {
-    baseTokens = config.preset;
-  } else {
-    baseTokens = presetRegistry[DEFAULT_PRESET]!.tokens;
-  }
-
-  // Apply overrides
-  if (config.overrides) {
-    return deepMerge(
-      baseTokens as unknown as Record<string, unknown>,
-      config.overrides as unknown as Record<string, unknown>
-    ) as unknown as ThemeTokens;
-  }
-  return baseTokens;
-}
-
-function deepMerge(
-  target: Record<string, unknown>,
-  source: Record<string, unknown>
-): Record<string, unknown> {
-  const result = { ...target };
-  for (const key of Object.keys(source)) {
-    const sourceVal = source[key];
-    const targetVal = target[key];
-    if (
-      sourceVal &&
-      typeof sourceVal === 'object' &&
-      !Array.isArray(sourceVal) &&
-      targetVal &&
-      typeof targetVal === 'object' &&
-      !Array.isArray(targetVal)
-    ) {
-      result[key] = deepMerge(
-        targetVal as Record<string, unknown>,
-        sourceVal as Record<string, unknown>
-      );
-    } else if (sourceVal !== undefined) {
-      result[key] = sourceVal;
-    }
-  }
-  return result;
 }
 
 function injectCSSVariables(tokens: ThemeTokens, mode: 'light' | 'dark') {
@@ -223,17 +148,13 @@ export function ThemeProvider({
   useEffect(() => {
     const root = document.documentElement;
 
-    // Apply class for Tailwind dark mode
     if (resolvedMode === 'dark') {
       root.classList.add('dark');
     } else {
       root.classList.remove('dark');
     }
 
-    // Smooth transition for mode switch
     root.style.setProperty('color-scheme', resolvedMode);
-
-    // Inject CSS vars
     injectCSSVariables(tokens, resolvedMode);
   }, [resolvedMode, tokens]);
 
@@ -266,21 +187,4 @@ export function ThemeProvider({
   return (
     <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
-}
-
-// ---------------------------------------------------------------------------
-// Hook
-// ---------------------------------------------------------------------------
-
-/**
- * Access theme context. Must be used within a ThemeProvider.
- */
-export function useTheme(): ThemeContextValue {
-  const ctx = useContext(ThemeContext);
-  if (!ctx) {
-    throw new Error(
-      '[tempo-ui] useTheme must be used within a <ThemeProvider>.'
-    );
-  }
-  return ctx;
 }

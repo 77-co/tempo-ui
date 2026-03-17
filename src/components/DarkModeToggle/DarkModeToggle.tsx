@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme, type ColorMode } from '../../theme/ThemeProvider';
+import { useTheme, type ColorMode } from '../../theme/ThemeContext';
 import { cn } from '../../lib/utils';
 
 export interface DarkModeToggleProps {

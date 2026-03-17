@@ -3,8 +3,14 @@
 // ============================================================================
 
 // Theme System
-export { ThemeProvider, useTheme } from './theme/ThemeProvider';
-export type { ThemeProviderProps, ThemeContextValue, ColorMode } from './theme/ThemeProvider';
+export { ThemeProvider } from './theme/ThemeProvider';
+export type { ThemeProviderProps } from './theme/ThemeProvider';
+export { useTheme } from './theme/ThemeContext';
+export type { ThemeContextValue, ColorMode } from './theme/ThemeContext';
+export { ThemeScript } from './theme/ThemeScript';
+export type { ThemeScriptProps } from './theme/ThemeScript';
+export { StaticThemeProvider } from './theme/StaticThemeProvider';
+export type { StaticThemeProviderProps } from './theme/StaticThemeProvider';
 export type { ThemeTokens, ThemeConfig, ThemePreset, ColorTokens, TypographyTokens, DeepPartial } from './theme/tokens';
 export { corporatePreset, startupPreset, elegantPreset, presetRegistry } from './theme/presets';
 
