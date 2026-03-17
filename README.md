@@ -21,7 +21,7 @@ Tempo UI is **not** a site builder or drag-and-drop tool — it is a curated set
 ## Installation
 
 ```bash
-npm install tempo-ui
+npm install @seventy7/tempo-ui
 ```
 
 ### Peer Dependencies
@@ -38,7 +38,7 @@ Import the base styles in your global CSS file (e.g. `globals.css`):
 
 ```css
 @import 'tailwindcss';
-@import 'tempo-ui/styles.css';
+@import '@seventy7/tempo-ui/styles.css';
 ```
 
 That's it. Tailwind v4 automatically detects your source files, and Tempo UI's styles ship with all theme configuration embedded.
@@ -57,7 +57,7 @@ import {
   SiteFooter,
   DarkModeToggle,
   Button,
-} from 'tempo-ui';
+} from '@seventy7/tempo-ui';
 
 export default function HomePage() {
   return (
@@ -163,7 +163,7 @@ Apply partial overrides on top of any preset:
 ### Dark Mode
 
 ```tsx
-import { DarkModeToggle, useTheme } from 'tempo-ui';
+import { DarkModeToggle, useTheme } from '@seventy7/tempo-ui';
 
 // Simple toggle button
 <DarkModeToggle />
@@ -255,7 +255,7 @@ function MyComponent() {
 All image components accept PayloadCMS media objects:
 
 ```tsx
-import { Image } from 'tempo-ui';
+import { Image } from '@seventy7/tempo-ui';
 
 // From PayloadCMS media field
 <Image src={page.heroImage} aspectRatio="16/9" />
@@ -267,7 +267,7 @@ import { Image } from 'tempo-ui';
 ### Rich Text
 
 ```tsx
-import { RichText } from 'tempo-ui';
+import { RichText } from '@seventy7/tempo-ui';
 
 // Directly pass PayloadCMS Lexical/Slate output
 <RichText content={page.content} />

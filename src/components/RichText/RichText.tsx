@@ -53,7 +53,7 @@ function renderNode(
       return <p key={key} className="mb-4 last:mb-0">{children}</p>;
     case 'heading': {
       const h = node as { tag: string; children: PayloadRichTextNode[] };
-      const Tag = h.tag as keyof JSX.IntrinsicElements;
+      const Tag = h.tag as keyof React.JSX.IntrinsicElements;
       const headingClasses: Record<string, string> = {
         h1: 'text-heading-xl font-heading font-bold mt-8 mb-4',
         h2: 'text-heading-lg font-heading font-bold mt-6 mb-3',
