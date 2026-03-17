@@ -12,7 +12,7 @@ import type {
   ThemeConfig,
   ColorTokens,
 } from './tokens';
-import { resolveTokens } from './themeUtils';
+import { resolveTokens, generateCSSVariables } from './themeUtils';
 import { ThemeContext } from './ThemeContext';
 import type { ColorMode, ThemeContextValue } from './ThemeContext';
 export type { ColorMode, ThemeContextValue } from './ThemeContext';
@@ -118,6 +118,7 @@ export function ThemeProvider({
   forcedMode,
 }: ThemeProviderProps) {
   const tokens = useMemo(() => resolveTokens(config), [config]);
+  const css = useMemo(() => generateCSSVariables(tokens), [tokens]);
 
   const [mode, setModeState] = useState<ColorMode>(() => {
     if (forcedMode) return forcedMode;
@@ -185,6 +186,9 @@ export function ThemeProvider({
   );
 
   return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>
+      <style dangerouslySetInnerHTML={{ __html: css }} />
+      {children}
+    </ThemeContext.Provider>
   );
 }

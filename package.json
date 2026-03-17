@@ -22,7 +22,7 @@
     "*.css"
   ],
   "scripts": {
-    "build": "tsup && npx @tailwindcss/cli -i ./src/styles/globals.css -o ./dist/styles.css --minify",
+    "build": "tsup && node ./post-build.js && npx @tailwindcss/cli -i ./src/styles/globals.css -o ./dist/styles.css --minify",
     "build:watch": "tsup --watch",
     "lint": "eslint src --ext .ts,.tsx",
     "typecheck": "tsc --noEmit",

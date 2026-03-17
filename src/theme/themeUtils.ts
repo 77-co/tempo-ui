@@ -1,6 +1,42 @@
 import type { ThemeTokens, ThemeConfig } from './tokens';
 import { presetRegistry, DEFAULT_PRESET } from './presets';
 
+export function generateCSSVariables(tokens: ThemeTokens): string {
+  const lines: string[] = [];
+
+  lines.push(':root {');
+  for (const [key, value] of Object.entries(tokens.colors.light)) {
+    lines.push(`  --${key}: ${value};`);
+  }
+  for (const [key, value] of Object.entries(tokens.typography)) {
+    lines.push(`  --${key}: ${value};`);
+  }
+  for (const [key, value] of Object.entries(tokens.spacing)) {
+    lines.push(`  --${key}: ${value};`);
+  }
+  for (const [key, value] of Object.entries(tokens.radius)) {
+    lines.push(`  --${key}: ${value};`);
+  }
+  for (const [key, value] of Object.entries(tokens.shadows)) {
+    lines.push(`  --${key}: ${value};`);
+  }
+  for (const [key, value] of Object.entries(tokens.durations)) {
+    lines.push(`  --${key}: ${value};`);
+  }
+  for (const [key, value] of Object.entries(tokens.containers)) {
+    lines.push(`  --${key}: ${value};`);
+  }
+  lines.push('}');
+
+  lines.push('.dark {');
+  for (const [key, value] of Object.entries(tokens.colors.dark)) {
+    lines.push(`  --${key}: ${value};`);
+  }
+  lines.push('}');
+
+  return lines.join('\n');
+}
+
 export function deepMerge(
   target: Record<string, unknown>,
   source: Record<string, unknown>

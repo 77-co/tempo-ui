@@ -1,48 +1,8 @@
 import React, { type ReactNode } from 'react';
 import type { ThemeConfig } from './tokens';
 import type { ThemeContextValue } from './ThemeContext';
-import { resolveTokens } from './themeUtils';
+import { resolveTokens, generateCSSVariables } from './themeUtils';
 import { StaticThemeContextBridge } from './StaticThemeContextBridge';
-
-// ---------------------------------------------------------------------------
-// CSS generation (same logic as ThemeScript)
-// ---------------------------------------------------------------------------
-
-function generateCSS(tokens: ReturnType<typeof resolveTokens>): string {
-  const lines: string[] = [];
-
-  lines.push(':root {');
-  for (const [key, value] of Object.entries(tokens.colors.light)) {
-    lines.push(`  --${key}: ${value};`);
-  }
-  for (const [key, value] of Object.entries(tokens.typography)) {
-    lines.push(`  --${key}: ${value};`);
-  }
-  for (const [key, value] of Object.entries(tokens.spacing)) {
-    lines.push(`  --${key}: ${value};`);
-  }
-  for (const [key, value] of Object.entries(tokens.radius)) {
-    lines.push(`  --${key}: ${value};`);
-  }
-  for (const [key, value] of Object.entries(tokens.shadows)) {
-    lines.push(`  --${key}: ${value};`);
-  }
-  for (const [key, value] of Object.entries(tokens.durations)) {
-    lines.push(`  --${key}: ${value};`);
-  }
-  for (const [key, value] of Object.entries(tokens.containers)) {
-    lines.push(`  --${key}: ${value};`);
-  }
-  lines.push('}');
-
-  lines.push('.dark {');
-  for (const [key, value] of Object.entries(tokens.colors.dark)) {
-    lines.push(`  --${key}: ${value};`);
-  }
-  lines.push('}');
-
-  return lines.join('\n');
-}
 
 // ---------------------------------------------------------------------------
 // Component
@@ -101,7 +61,7 @@ export function StaticThemeProvider({
   mode = 'light',
 }: StaticThemeProviderProps) {
   const tokens = resolveTokens(config);
-  const css = generateCSS(tokens);
+  const css = generateCSSVariables(tokens);
 
   const noop = () => {};
 

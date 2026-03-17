@@ -1,49 +1,6 @@
-import React from 'react';
-import type { ThemeConfig, ThemeTokens } from './tokens';
+import type { ThemeConfig } from './tokens';
 import type { ColorMode } from './ThemeContext';
-import { resolveTokens } from './themeUtils';
-
-// ---------------------------------------------------------------------------
-// CSS generation
-// ---------------------------------------------------------------------------
-
-function generateCSS(tokens: ThemeTokens): string {
-  const lines: string[] = [];
-
-  // :root — light colors + all non-color tokens
-  lines.push(':root {');
-  for (const [key, value] of Object.entries(tokens.colors.light)) {
-    lines.push(`  --${key}: ${value};`);
-  }
-  for (const [key, value] of Object.entries(tokens.typography)) {
-    lines.push(`  --${key}: ${value};`);
-  }
-  for (const [key, value] of Object.entries(tokens.spacing)) {
-    lines.push(`  --${key}: ${value};`);
-  }
-  for (const [key, value] of Object.entries(tokens.radius)) {
-    lines.push(`  --${key}: ${value};`);
-  }
-  for (const [key, value] of Object.entries(tokens.shadows)) {
-    lines.push(`  --${key}: ${value};`);
-  }
-  for (const [key, value] of Object.entries(tokens.durations)) {
-    lines.push(`  --${key}: ${value};`);
-  }
-  for (const [key, value] of Object.entries(tokens.containers)) {
-    lines.push(`  --${key}: ${value};`);
-  }
-  lines.push('}');
-
-  // .dark — dark color overrides only
-  lines.push('.dark {');
-  for (const [key, value] of Object.entries(tokens.colors.dark)) {
-    lines.push(`  --${key}: ${value};`);
-  }
-  lines.push('}');
-
-  return lines.join('\n');
-}
+import { resolveTokens, generateCSSVariables } from './themeUtils';
 
 // ---------------------------------------------------------------------------
 // Anti-FOUC script
@@ -108,7 +65,7 @@ export function ThemeScript({
   nonce,
 }: ThemeScriptProps) {
   const tokens = resolveTokens(config);
-  const css = generateCSS(tokens);
+  const css = generateCSSVariables(tokens);
 
   const scriptContent = forcedMode
     ? `(function(){var r=document.documentElement;r.classList[${JSON.stringify(forcedMode === 'dark' ? 'add' : 'remove')}]('dark');r.style.colorScheme=${JSON.stringify(forcedMode)};})();`
