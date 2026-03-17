@@ -32,28 +32,16 @@ npm install react react-dom
 
 ### Tailwind CSS Setup
 
-Add Tempo UI content paths to your `tailwind.config.ts`:
+Tempo UI uses Tailwind v4, which is configured entirely in CSS — no `tailwind.config.ts` needed.
 
-```ts
-import type { Config } from 'tailwindcss';
-
-const config: Config = {
-  content: [
-    './src/**/*.{ts,tsx}',
-    './node_modules/tempo-ui/dist/**/*.{js,mjs}',
-  ],
-  darkMode: 'class',
-  // ... your config
-};
-
-export default config;
-```
-
-Import the base styles in your global CSS:
+Import the base styles in your global CSS file (e.g. `globals.css`):
 
 ```css
+@import 'tailwindcss';
 @import 'tempo-ui/styles.css';
 ```
+
+That's it. Tailwind v4 automatically detects your source files, and Tempo UI's styles ship with all theme configuration embedded.
 
 ---
 

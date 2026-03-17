@@ -14,37 +14,37 @@
     "./styles.css": "./dist/styles.css"
   },
   "files": [
-    "dist",
-    "tailwind.preset.js"
+    "dist"
   ],
   "sideEffects": [
     "*.css"
   ],
   "scripts": {
-    "build": "tsup && tailwindcss -i ./src/styles/globals.css -o ./dist/styles.css --minify",
+    "build": "tsup && npx @tailwindcss/cli -i ./src/styles/globals.css -o ./dist/styles.css --minify",
     "build:watch": "tsup --watch",
     "lint": "eslint src --ext .ts,.tsx",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"
   },
   "peerDependencies": {
-    "react": ">=18.0.0",
-    "react-dom": ">=18.0.0"
+    "react": ">=19.0.0",
+    "react-dom": ">=19.0.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "autoprefixer": "^10.4.19",
-    "postcss": "^8.4.38",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "tailwindcss": "^3.4.4",
-    "tsup": "^8.1.0",
-    "typescript": "^5.5.0"
+    "@tailwindcss/cli": "^4.2.1",
+    "@tailwindcss/postcss": "^4.2.1",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "postcss": "^8.5.8",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "tailwindcss": "^4.2.1",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "clsx": "^2.1.1",
-    "tailwind-merge": "^2.3.0"
+    "tailwind-merge": "^3.5.0"
   },
   "keywords": [
     "react",
