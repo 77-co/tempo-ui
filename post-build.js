@@ -9,6 +9,6 @@ readdirSync(distDir)
     const content = readFileSync(path, "utf8");
     writeFileSync(
       path,
-      `/** Tempo UI, Copyright 2026 Maciej Gomoła, seventy7 and contributors. This code is licensed under the GNU General Public License v3.0. Learn more in LICENSE. */\n"use client";\n${content}`,
+      `/** Tempo UI, Copyright 2026 Maciej Gomoła, seventy7 and contributors. This code is licensed under the GNU General Public License v3.0. Learn more in LICENSE. */\n${content}`,
     );
   });

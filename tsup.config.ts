@@ -7,7 +7,7 @@ export default defineConfig({
   splitting: true,
   treeshake: true,
   clean: true,
-  external: ["react", "react-dom"],
+  external: ["react", "react-dom", "@base-ui-components/react"],
   outExtension({ format }) {
     return {
       js: format === "cjs" ? ".cjs.js" : ".esm.js",

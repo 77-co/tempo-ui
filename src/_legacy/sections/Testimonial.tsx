@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect, useCallback, type ReactNode } from 'react';
 import { cn } from '../../lib/utils';
 import type { PayloadMedia } from '../../types/payload';

@@ -1,0 +1,10 @@
+export { Footer } from './Footer';
+export type { FooterProps } from './Footer';
+export { FooterBrand } from './FooterBrand';
+export type { FooterBrandProps } from './FooterBrand';
+export { FooterColumn } from './FooterColumn';
+export type { FooterColumnProps } from './FooterColumn';
+export { FooterLink } from './FooterLink';
+export type { FooterLinkProps } from './FooterLink';
+export { FooterLegal } from './FooterLegal';
+export type { FooterLegalProps } from './FooterLegal';

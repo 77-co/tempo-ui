@@ -2,6 +2,9 @@
 
 @source "../components/**/*.tsx";
 @source "../theme/**/*.tsx";
+@source "../blocks/**/*.tsx";
+@source "../ui/**/*.tsx";
+@source "../_legacy/**/*.tsx";
 
 /* Class-based dark mode */
 @custom-variant dark (&:is(.dark, .dark *));
