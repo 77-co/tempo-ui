@@ -8,13 +8,14 @@ Tempo UI is **not** a site builder or drag-and-drop tool — it is a curated set
 
 ## Features
 
-- 🎨 **Centralized theming** — Single theme provider governs all design tokens
-- 🌗 **Dark mode** — System detection, persistent toggle, smooth transitions
-- 📱 **Mobile-first** — Fully responsive across all breakpoints
-- ♿ **WCAG 2.2 AA** — Proper ARIA, keyboard nav, focus management, reduced-motion respect
-- 🧩 **PayloadCMS ready** — Data shapes align with PayloadCMS schemas
-- 🎯 **3 built-in presets** — Corporate, Startup, Elegant
-- 📦 **Tree-shakeable** — Import only what you use
+- **Centralized theming** — Single theme provider governs all design tokens
+- **Dark mode** — System detection, persistent toggle, smooth transitions, FOUC-free
+- **Mobile-first** — Fully responsive across all breakpoints
+- **WCAG 2.2 AA** — Proper ARIA, keyboard nav, focus management, reduced-motion respect
+- **PayloadCMS ready** — Data shapes align with PayloadCMS schemas
+- **3 built-in presets** — Corporate, Startup, Elegant
+- **Tree-shakeable** — Import only what you use
+- **Base UI primitives** — Accessible headless components under the hood (no external UI library lock-in)
 
 ---
 
@@ -50,11 +51,22 @@ That's it. Tailwind v4 automatically detects your source files, and Tempo UI's s
 ```tsx
 import {
   ThemeProvider,
-  SiteHeader,
-  HeroSection,
-  FeatureGrid,
-  CallToAction,
-  SiteFooter,
+  Header,
+  HeaderBrand,
+  HeaderNav,
+  HeaderNavItem,
+  HeaderActions,
+  Hero,
+  HeroBackground,
+  HeroContent,
+  HeroHeadline,
+  HeroSubheadline,
+  HeroActions,
+  Footer,
+  FooterBrand,
+  FooterColumn,
+  FooterLink,
+  FooterLegal,
   DarkModeToggle,
   Button,
 } from '@seventy7/tempo-ui';
@@ -62,51 +74,48 @@ import {
 export default function HomePage() {
   return (
     <ThemeProvider config={{ preset: 'startup' }}>
-      <SiteHeader
-        logo={<span className="text-xl font-bold">MyBrand</span>}
-        navigation={
-          <>
-            <a href="/features" className="px-3 py-2 text-sm hover:text-primary">Features</a>
-            <a href="/pricing" className="px-3 py-2 text-sm hover:text-primary">Pricing</a>
-            <a href="/contact" className="px-3 py-2 text-sm hover:text-primary">Contact</a>
-          </>
-        }
-        actions={
-          <>
-            <DarkModeToggle size="sm" />
-            <Button size="sm">Get Started</Button>
-          </>
-        }
-      />
+      <Header sticky>
+        <HeaderBrand>
+          <span className="text-xl font-bold">MyBrand</span>
+        </HeaderBrand>
+        <HeaderNav>
+          <HeaderNavItem href="/features">Features</HeaderNavItem>
+          <HeaderNavItem href="/pricing">Pricing</HeaderNavItem>
+          <HeaderNavItem href="/contact">Contact</HeaderNavItem>
+        </HeaderNav>
+        <HeaderActions>
+          <DarkModeToggle size="sm" />
+          <Button size="sm">Get Started</Button>
+        </HeaderActions>
+      </Header>
 
-      <HeroSection
-        headline="Build amazing websites with Tempo UI"
-        subheadline="A composable component system designed for PayloadCMS"
-        primaryAction={{ label: 'Get Started', href: '/docs' }}
-        secondaryAction={{ label: 'View Demo', href: '/demo' }}
-      />
+      <Hero>
+        <HeroBackground overlay />
+        <HeroContent textAlign="center">
+          <HeroHeadline>Build amazing websites with Tempo UI</HeroHeadline>
+          <HeroSubheadline>A composable component system designed for PayloadCMS</HeroSubheadline>
+          <HeroActions>
+            <Button size="lg">Get Started</Button>
+            <Button size="lg" variant="outline">View Demo</Button>
+          </HeroActions>
+        </HeroContent>
+      </Hero>
 
-      <FeatureGrid
-        features={[
-          { heading: 'Theme System', description: 'Centralized tokens power every component.', icon: '🎨' },
-          { heading: 'Dark Mode', description: 'System detection with persistent toggle.', icon: '🌗' },
-          { heading: 'Accessible', description: 'WCAG 2.2 AA compliant out of the box.', icon: '♿' },
-        ]}
-      />
-
-      <CallToAction
-        heading="Ready to get started?"
-        body="Install Tempo UI and build your next website in hours, not weeks."
-        action={{ label: 'Install Now', href: '/docs' }}
-      />
-
-      <SiteFooter
-        copyright="© 2025 MyBrand. All rights reserved."
-        columns={[
-          { title: 'Product', links: [{ label: 'Features', href: '/features' }, { label: 'Pricing', href: '/pricing' }] },
-          { title: 'Company', links: [{ label: 'About', href: '/about' }, { label: 'Contact', href: '/contact' }] },
-        ]}
-      />
+      <Footer>
+        <FooterBrand>
+          <span className="font-bold text-lg">MyBrand</span>
+          <p className="text-sm text-muted-foreground mt-2">Building better websites.</p>
+        </FooterBrand>
+        <FooterColumn title="Product">
+          <FooterLink href="/features">Features</FooterLink>
+          <FooterLink href="/pricing">Pricing</FooterLink>
+        </FooterColumn>
+        <FooterColumn title="Company">
+          <FooterLink href="/about">About</FooterLink>
+          <FooterLink href="/contact">Contact</FooterLink>
+        </FooterColumn>
+        <FooterLegal>© 2025 MyBrand. All rights reserved.</FooterLegal>
+      </Footer>
     </ThemeProvider>
   );
 }
@@ -179,6 +188,30 @@ function MyComponent() {
 }
 ```
 
+### FOUC Prevention (SSR / Next.js)
+
+Use `ThemeScript` in your document `<head>` and `StaticThemeProvider` on the server to prevent flash of unstyled content:
+
+```tsx
+// app/layout.tsx (Next.js App Router)
+import { ThemeScript, StaticThemeProvider } from '@seventy7/tempo-ui';
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <head>
+        <ThemeScript config={{ preset: 'startup' }} />
+      </head>
+      <body>
+        <StaticThemeProvider config={{ preset: 'startup' }}>
+          {children}
+        </StaticThemeProvider>
+      </body>
+    </html>
+  );
+}
+```
+
 ---
 
 ## Component Inventory
@@ -193,26 +226,29 @@ function MyComponent() {
 | `Section` | Page section with background, padding, optional container |
 | `Divider` | Visual separator with orientation and label support |
 
-### Data Entry
+### UI Components
+
+Built on [Base UI](https://base-ui.com) for accessible, headless behaviour with Tempo's design tokens applied.
 
 | Component | Description |
 |-----------|-------------|
-| `Button` | Multi-variant button with icons, loading, disabled states |
-| `TextInput` | Text input with icons, error state, sizes |
+| `Button` | Multi-variant button with icons, loading state, Base UI `render` prop for custom elements |
+| `Input` | Text input with icons, error state, sizes |
 | `TextArea` | Auto-resizable textarea |
-| `Select` | Native select with options |
+| `Select` | Select with option groups |
 | `Checkbox` | Labeled checkbox |
 | `RadioGroup` | Radio button group |
-| `Toggle` | Switch/toggle component |
+| `Switch` | Toggle switch |
 | `DatePicker` | Native date input |
 | `FormField` | Label + helper text + error wrapper |
+| `Accordion` | Collapsible panels with FAQ schema support |
+| `Tabs` | Tab panel with underline/pills/bordered variants |
+| `Dialog` | Modal dialog with focus trap, keyboard dismiss |
 
 ### Navigation
 
 | Component | Description |
 |-----------|-------------|
-| `Accordion` | Collapsible panels with FAQ schema support |
-| `Tabs` | Tab panel with underline/pills/bordered variants |
 | `Breadcrumbs` | Breadcrumb trail with custom link renderer |
 | `Pagination` | Page navigation with ellipsis |
 
@@ -220,7 +256,6 @@ function MyComponent() {
 
 | Component | Description |
 |-----------|-------------|
-| `Modal` | Dialog with focus trap, keyboard dismiss |
 | `ToastProvider` / `useToast` | Toast notification system |
 
 ### Media & Content
@@ -230,21 +265,82 @@ function MyComponent() {
 | `Image` | Lazy loading, aspect ratio, blur-up, PayloadCMS support |
 | `RichText` | Renders PayloadCMS rich text to styled typography |
 
-### Page Sections
+### Blocks — Compositional Page Sections
 
-| Component | Description |
-|-----------|-------------|
-| `SiteHeader` | Sticky/transparent header with mobile drawer |
-| `SiteFooter` | Multi-column footer with newsletter, social, back-to-top |
-| `HeroSection` | Full-bleed hero with image/video, CTAs, overlay |
-| `FeatureGrid` / `FeatureCard` | Service/capability showcase |
-| `Testimonial` / `TestimonialCarousel` | Quote carousel with autoplay |
-| `PricingTable` | Tiered pricing with feature comparison |
-| `CallToAction` | Banner with heading, body, CTA buttons |
-| `StatsBar` | Animated counting statistics |
-| `LogoCloud` | Partner/client logos with grayscale hover |
-| `TeamGrid` | Team member cards with social links |
-| `BlogPostCard` / `BlogGrid` | Blog post listing |
+Blocks are composable, slot-based page-level constructs. Compose them from their named sub-components rather than passing monolithic prop objects.
+
+#### Header block
+
+```tsx
+import {
+  Header, HeaderBrand, HeaderNav, HeaderNavItem,
+  HeaderActions, HeaderMobileMenu,
+} from '@seventy7/tempo-ui';
+
+<Header sticky transparent>
+  <HeaderBrand>
+    <img src="/logo.svg" alt="MyBrand" className="h-8" />
+  </HeaderBrand>
+  <HeaderNav>
+    <HeaderNavItem href="/features">Features</HeaderNavItem>
+    <HeaderNavItem href="/pricing">Pricing</HeaderNavItem>
+  </HeaderNav>
+  <HeaderActions>
+    <DarkModeToggle size="sm" />
+    <Button size="sm">Sign In</Button>
+  </HeaderActions>
+  <HeaderMobileMenu>
+    <HeaderNavItem href="/features">Features</HeaderNavItem>
+    <HeaderNavItem href="/pricing">Pricing</HeaderNavItem>
+  </HeaderMobileMenu>
+</Header>
+```
+
+#### Hero block
+
+```tsx
+import {
+  Hero, HeroBackground, HeroContent,
+  HeroHeadline, HeroSubheadline, HeroActions,
+} from '@seventy7/tempo-ui';
+
+<Hero minHeight="80vh">
+  <HeroBackground src="/hero.jpg" overlay />
+  <HeroContent textAlign="center" maxWidth="lg">
+    <HeroHeadline>Ship faster with Tempo UI</HeroHeadline>
+    <HeroSubheadline>Production-ready components for PayloadCMS projects</HeroSubheadline>
+    <HeroActions>
+      <Button size="xl">Get Started</Button>
+      <Button size="xl" variant="outline">Read the Docs</Button>
+    </HeroActions>
+  </HeroContent>
+</Hero>
+```
+
+#### Footer block
+
+```tsx
+import {
+  Footer, FooterBrand, FooterColumn,
+  FooterLink, FooterLegal,
+} from '@seventy7/tempo-ui';
+
+<Footer>
+  <FooterBrand>
+    <span className="font-bold text-lg">MyBrand</span>
+    <p className="text-sm text-muted-foreground mt-2">Building better websites.</p>
+  </FooterBrand>
+  <FooterColumn title="Product">
+    <FooterLink href="/features">Features</FooterLink>
+    <FooterLink href="/pricing">Pricing</FooterLink>
+  </FooterColumn>
+  <FooterColumn title="Company">
+    <FooterLink href="/about">About</FooterLink>
+    <FooterLink href="/blog">Blog</FooterLink>
+  </FooterColumn>
+  <FooterLegal>© 2025 MyBrand. All rights reserved.</FooterLegal>
+</Footer>
+```
 
 ---
 
@@ -289,15 +385,15 @@ function RenderBlocks({ blocks }) {
   return blocks.map((block, i) => {
     switch (block.blockType) {
       case 'hero':
-        return <HeroSection key={i} {...block} />;
-      case 'features':
-        return <Section key={i} padding="lg"><FeatureGrid features={block.features} /></Section>;
-      case 'testimonials':
-        return <Section key={i} background="muted"><TestimonialCarousel testimonials={block.items} /></Section>;
-      case 'cta':
-        return <Section key={i}><CallToAction {...block} /></Section>;
-      case 'pricing':
-        return <Section key={i}><PricingTable tiers={block.tiers} /></Section>;
+        return (
+          <Hero key={i}>
+            <HeroBackground src={block.image?.url} overlay />
+            <HeroContent textAlign="center">
+              <HeroHeadline>{block.headline}</HeroHeadline>
+              <HeroSubheadline>{block.subheadline}</HeroSubheadline>
+            </HeroContent>
+          </Hero>
+        );
       case 'richText':
         return <Section key={i}><RichText content={block.content} /></Section>;
       default:
@@ -305,21 +401,6 @@ function RenderBlocks({ blocks }) {
     }
   });
 }
-```
-
-### Custom Link Renderer (Next.js)
-
-Many components accept a `renderLink` prop for framework-specific routing:
-
-```tsx
-import Link from 'next/link';
-
-<SiteFooter
-  renderLink={({ href, className, children }) => (
-    <Link href={href} className={className}>{children}</Link>
-  )}
-  // ...
-/>
 ```
 
 ---
